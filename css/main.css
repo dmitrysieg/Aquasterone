@@ -1,0 +1,11 @@
+html, body {
+    margin: 0;
+    background-color: #000;
+    overflow: hidden;
+}
+
+.aquatic {
+    position: absolute;
+    background-color: #ff0;
+    border-radius: 16px;
+}
