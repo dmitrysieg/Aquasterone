@@ -1,12 +1,6 @@
-let Seaweed = function(x, y) {
-    this.position = {};
-    this.position.x = x;
-    this.position.y = y;
-
-    this.el = document.createElement('div');
-    this.el.className = 'seaweed';
-    this.el.style.height = this.height;
-    this.el.style.width = this.width;
+let Seaweed = function(position) {
+    this.position = position
+    this.el = Utils.initElement('seaweed', this.height, this.width);
 
     this.doRedraw();
     document.body.appendChild(this.el);

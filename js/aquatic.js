@@ -1,26 +1,10 @@
-let generateRandomVector = function(maxValue, minValue) {
-    let angle = 2.0 * Math.PI * Math.random();
-    let value = (minValue || 0.0) + (maxValue - (minValue || 0.0)) * Math.random();
-    return {
-        x: value * Math.cos(angle),
-        y: value * Math.sin(angle)
-    };
-}
-
-let Aquatic = function(x, y, value) {
+let Aquatic = function(position, value) {
 
     this.value = value;
+    this.position = position;
+    this.velocity = Utils.generateRandomVector(this.height * 10, this.height * 2);
 
-    this.position = {};
-    this.position.x = x;
-    this.position.y = y;
-
-    this.velocity = generateRandomVector(this.height * 10, this.height * 2);
-
-    this.el = document.createElement('div');
-    this.el.className = 'aquatic';
-    this.el.style.height = this.height;
-    this.el.style.width = this.width;
+    this.el = Utils.initElement('aquatic', this.height, this.width);
 
     this.doRedraw();
     document.body.appendChild(this.el);
