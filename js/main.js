@@ -9,7 +9,7 @@
         let dt = time - prev;
         prev = time;
 
-        a1.doMove(dt);
+        a1.doMoveSmart(dt);
         requestAnimationFrame(callback);
     });
 })();
