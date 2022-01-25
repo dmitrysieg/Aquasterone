@@ -9,3 +9,8 @@ html, body {
     background-color: #ff0;
     border-radius: 16px;
 }
+
+.seaweed {
+    position: absolute;
+    background-color: #0c0;
+}
