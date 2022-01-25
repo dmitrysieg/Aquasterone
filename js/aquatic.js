@@ -1,4 +1,7 @@
-var Aquatic = function(x, y) {
+let Aquatic = function(x, y, value) {
+
+    this.value = value;
+
     this.el = document.createElement('div');
     this.el.className = 'aquatic';
     this.el.style.height = this.height;
