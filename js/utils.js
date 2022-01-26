@@ -49,6 +49,20 @@ let Utils = {
         el.style.width = w;
         return el;
     },
+    addStatusBar: function(el) {
+        let statusBar = document.createElement('div');
+        statusBar.className = 'statusBar';
+        el.appendChild(statusBar);
+
+        let emptyBar = document.createElement('div');
+        emptyBar.className = 'empty';
+        statusBar.appendChild(emptyBar);
+
+        let fullBar = document.createElement('div');
+        fullBar.className = 'full';
+        statusBar.appendChild(fullBar);
+        return statusBar;
+    },
     generateRandomPosition: function(object) {
         return {
             x: (object.width / 2) + Math.random() * (document.body.clientWidth - object.width),

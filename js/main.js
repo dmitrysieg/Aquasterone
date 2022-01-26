@@ -22,15 +22,19 @@
 
     let position = Utils.generateRandomPosition(Aquatic.prototype);
     let value = Math.random();
-    let a1 = new Aquatic(position, value, seaweedGenerator);
+    let aquaticArray = [];
+    aquaticArray.push(new Aquatic(position, value, seaweedGenerator));
 
     let prev = performance.now();
     requestAnimationFrame(function callback(time) {
         let dt = time - prev;
         prev = time;
 
-        a1.doDecideThink(dt);
-        a1.doMoveSmart(dt);
+        aquaticArray.forEach(a => {
+            a.doDecideThink(dt);
+            a.doMoveSmart(dt);
+        });
+
         seaweedGenerator.doGen(dt);
 
         requestAnimationFrame(callback);

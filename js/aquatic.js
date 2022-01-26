@@ -8,6 +8,7 @@ let Aquatic = function(position, value, outerWorld) {
     this.delayBeforeThinkAcc = 0;
 
     this.el = Utils.initElement('aquatic', this.height, this.width);
+    Utils.addStatusBar(this.el);
 
     this.doRedraw();
     document.body.appendChild(this.el);
