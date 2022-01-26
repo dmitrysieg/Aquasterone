@@ -1,13 +1,13 @@
-let Aquatic = function(position, testosterone, outerWorld) {
+let Aquatic = function(position, hormonal, outerWorld) {
 
     this.outerWorld = outerWorld;
 
     this.el = Utils.initElement('aquatic', this.height, this.width);
     this.statusBar = Utils.addStatusBar(this.el);
 
-    this.testosterone = testosterone;
+    this.hormonal = hormonal;
     this.position = position;
-    this.setVelocity(Utils.generateRandomVectorAngle(this.height * this.testosterone));
+    this.setVelocity(Utils.generateRandomVectorAngle(this.height * this.hormonal.testosterone));
     this.delayBeforeThinkAcc = 0;
 
     this.hunger = this.maxHunger;
@@ -118,7 +118,7 @@ Aquatic.prototype = {
         let weakerDiffTarget = null;
 
         this.outerWorld.aquaticGenerator.aquaticArray.forEach(a => {
-            let diff = a.testosterone - this.testosterone;
+            let diff = a.hormonal.testosterone - this.hormonal.testosterone;
             if (diff > 0 && weakerDiff > diff) {
                 weakerDiff = diff;
                 weakerDiffTarget = a;
@@ -129,12 +129,7 @@ Aquatic.prototype = {
     },
     doAlterDirection: function(target) {
         if (target) {
-            let velocityValue = Utils.getVectorValue(this.velocity);
-            let targetDistance = Utils.distance(this.position, target.position);
-            this.setVelocity({
-                x: (target.position.x - this.position.x) / targetDistance * velocityValue,
-                y: (target.position.y - this.position.y) / targetDistance * velocityValue
-            });
+            this.setVelocityAlong(target);
         } else {
             // so far nothing. choose random direction here;
         }
@@ -174,15 +169,12 @@ Aquatic.prototype = {
             this.doEat(nearest.target);
             return;
         } else {
+
             // Set target
             this.target = nearest.target;
+
             // Modify velocity along the target
-            let velocityValue = Utils.getVectorValue(this.velocity);
-            let targetDistance = Utils.distance(this.position, nearest.target.position);
-            this.setVelocity({
-                x: (nearest.target.position.x - this.position.x) / targetDistance * velocityValue,
-                y: (nearest.target.position.y - this.position.y) / targetDistance * velocityValue
-            });
+            this.setVelocityAlong(nearest.target);
         }
     },
 
@@ -222,6 +214,9 @@ Aquatic.prototype = {
     setVelocity: function(v) {
         this.velocity = v;
         this.el.style.transform = 'rotate(' + Utils.getVectorDegree(v) + 'deg)';
+    },
+    setVelocityAlong: function(target) {
+        this.setVelocity(Utils.createDirectionalVector(this, target, Utils.getVectorValue(this.velocity)));
     },
     setHunger: function(hunger) {
         this.hunger = hunger;

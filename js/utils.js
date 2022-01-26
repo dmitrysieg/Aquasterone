@@ -40,6 +40,16 @@ let Utils = {
             return Math.floor(deg);
         }
     },
+
+    // Both subject and object must have position.
+    createDirectionalVector: function(subject, object, value) {
+        let targetDistance = Utils.distance(subject.position, object.position);
+        return {
+            x: (object.position.x - subject.position.x) / targetDistance * value,
+            y: (object.position.y - subject.position.y) / targetDistance * value
+        };
+    },
+
     // subject.position must exist
     // array[i].position must exist
     findNearestObject: function(subject, array, filteredProperty) {

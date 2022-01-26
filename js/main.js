@@ -77,7 +77,10 @@
                 seaweedGenerator: seaweedGenerator,
                 media: media
             };
-            this.aquaticArray.push(new Aquatic(position, testosterone, outerWorld));
+            let hormonal = {
+                testosterone: testosterone
+            };
+            this.aquaticArray.push(new Aquatic(position, hormonal, outerWorld));
         },
         doProcess: function(dt) {
             this.aquaticArray.forEach(a => {
