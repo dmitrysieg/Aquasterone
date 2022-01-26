@@ -8,8 +8,17 @@
             if (this.generatorAcc > this.generatorSpeed) {
                 this.generatorAcc -= this.generatorSpeed;
                 let position = Utils.generateRandomPosition(Seaweed.prototype);
-                this.seaweedArray.push(new Seaweed(position));
+
+                let outerWorld = {
+                    seaweedGenerator: seaweedGenerator
+                };
+                this.seaweedArray.push(new Seaweed(position, outerWorld));
             }
+        },
+        doProcess: function(dt) {
+            this.seaweedArray.forEach(s => {
+                s.doLive(dt);
+            });
         },
         doRemoveObject: function(object) {
             let i = this.seaweedArray.indexOf(object);
@@ -35,6 +44,13 @@
             this.aquaticArray.forEach(a => {
                 a.doLive(dt);
             });
+        },
+        doRemoveObject: function(object) {
+            let i = this.aquaticArray.indexOf(object);
+            if (i > -1) {
+                this.aquaticArray.splice(i, 1);
+                object.el.remove();
+            }
         }
     };
 
@@ -52,6 +68,7 @@
         aquaticGenerator.doProcess(dt);
 
         seaweedGenerator.doGen(dt);
+        seaweedGenerator.doProcess(dt);
 
         requestAnimationFrame(callback);
     });

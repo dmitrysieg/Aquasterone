@@ -10,7 +10,7 @@ let Aquatic = function(position, value, outerWorld) {
     this.setVelocity(Utils.generateRandomVector(this.height * 10, this.height * 2));
     this.delayBeforeThinkAcc = 0;
 
-    this.hunger = 100;
+    this.hunger = this.maxHunger;
 
     this.doRedraw();
     document.body.appendChild(this.el);
@@ -19,6 +19,7 @@ let Aquatic = function(position, value, outerWorld) {
 Aquatic.prototype = {
     height: 32,
     width: 32,
+    maxHunger: 100,
     delayBeforeThinkThreshold: 2000,
 
     // Minus 5 per sec
@@ -31,27 +32,32 @@ Aquatic.prototype = {
     /* ------------------------------------------------------------------------------------------------------------- */
 
     doLive: function(dt) {
-        this.doOrganismFunctions(dt);
+        // trying to stay alive
+        if (!this.doOrganismFunctions(dt)) {
+            return;
+        }
         this.doDecideThink(dt);
         this.doMoveSmart(dt);
     },
 
     /* ------------------------------------------------------------------------------------------------------------- */
 
+    // return true if stay alive, false otherwise.
     doOrganismFunctions: function(dt) {
 
         // Hunger
         let newHunger = this.hunger - (dt / 1000) * this.appetite;
         if (newHunger <= 0) {
             this.doDie();
-            return;
+            return false;
         }
 
         this.setHunger(newHunger);
+        return true;
     },
 
     doDie: function() {
-        this.el.style.filter = 'opacity(0.2) blur(2px)';
+        this.outerWorld.aquaticGenerator.doRemoveObject(this);
     },
 
     doMoveSmart: function(dt) {
@@ -68,11 +74,12 @@ Aquatic.prototype = {
     doCheckTarget: function() {
         if (this.target && Utils.distance2(this.position, this.target.position) <= this.getSize2()) {
             this.doEat(this.target);
-            this.target = null;
         }
     },
     doEat: function(object) {
+        this.setHunger(Utils.addSaturate(this.hunger, object.foodValue, this.maxHunger));
         this.outerWorld.seaweedGenerator.doRemoveObject(object);
+        this.target = null;
     },
     doDecideThink: function(dt) {
 
@@ -80,9 +87,12 @@ Aquatic.prototype = {
             return;
         }
 
+        // make aquatic to think faster when hungry
+        let actual_beforeThink_threshold = this.delayBeforeThinkThreshold * (this.hunger / 100);
+
         this.delayBeforeThinkAcc += dt;
-        if (this.delayBeforeThinkAcc >= this.delayBeforeThinkThreshold) {
-            this.delayBeforeThinkAcc -= this.delayBeforeThinkThreshold;
+        if (this.delayBeforeThinkAcc >= actual_beforeThink_threshold) {
+            this.delayBeforeThinkAcc = 0;
             this.doThink();
         }
     },
@@ -94,7 +104,6 @@ Aquatic.prototype = {
 
         if (nearest.d2 <= this.getSize2()) {
             this.doEat(nearest.target);
-            this.target = null;
             return;
         } else {
             // Set target

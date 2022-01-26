@@ -1,6 +1,10 @@
 let Utils = {
 
     // Math methods
+    addSaturate: function(source, value, max) {
+        let result = source + value;
+        return result > max ? max : result;
+    },
     generateRandomVector: function(maxValue, minValue) {
         let angle = 2.0 * Math.PI * Math.random();
         let value = (minValue || 0.0) + (maxValue - (minValue || 0.0)) * Math.random();
