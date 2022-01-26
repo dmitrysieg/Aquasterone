@@ -20,6 +20,28 @@ Utils.prototype = {
     getVectorValue: function(v) {
         return Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2));
     },
+    // subject.position must exist
+    // array[i].position must exist
+    findNearestObject: function(subject, array) {
+
+        if (array.length <= 0) {
+            return null;
+        }
+
+        let min_d2 = Number.POSITIVE_INFINITY;
+        let min_target = null;
+        for (i = 0, l = array.length; i < l; i++) {
+            let d2 = Utils.distance2(subject.position, array[i].position);
+            if (d2 < min_d2) {
+                min_d2 = d2;
+                min_target = array[i];
+            }
+        }
+        return {
+            d2: min_d2,
+            target: min_target
+        }
+    },
 
     // Document methods
     initElement: function(name, h, w) {

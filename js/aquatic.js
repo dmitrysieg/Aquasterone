@@ -33,9 +33,12 @@ Aquatic.prototype = {
     },
     doCheckTarget: function() {
         if (this.target && Utils.distance2(this.position, this.target.position) <= this.getSize2()) {
-            this.outerWorld.doRemoveObject(this.target);
+            this.doEat(this.target);
             this.target = null;
         }
+    },
+    doEat: function(object) {
+        this.outerWorld.doRemoveObject(object);
     },
     doDecideThink: function(dt) {
 
@@ -50,33 +53,24 @@ Aquatic.prototype = {
         }
     },
     doThink: function() {
-        if (this.outerWorld.seaweedArray.length <= 0) {
+        let nearest = Utils.findNearestObject(this, this.outerWorld.seaweedArray);
+        if (!nearest) {
             return;
         }
 
-        let min_d2 = Number.POSITIVE_INFINITY;
-        let min_target = null;
-        for (i = 0, l = this.outerWorld.seaweedArray.length; i < l; i++) {
-            let d2 = Utils.distance2(this.position, this.outerWorld.seaweedArray[i].position);
-            if (d2 < min_d2) {
-                min_d2 = d2;
-                min_target = this.outerWorld.seaweedArray[i];
-            }
-        }
-
-        if (min_d2 <= this.getSize2()) {
-            this.doEat(min_target);
+        if (nearest.d2 <= this.getSize2()) {
+            this.doEat(nearest.target);
             this.target = null;
             return;
         } else {
             // Set target
-            this.target = min_target;
+            this.target = nearest.target;
             // Modify velocity along the target
             let velocityValue = Utils.getVectorValue(this.velocity);
-            let targetDistance = Utils.distance(this.position, min_target.position);
+            let targetDistance = Utils.distance(this.position, nearest.target.position);
             this.velocity = {
-                x: (min_target.position.x - this.position.x) / targetDistance * velocityValue,
-                y: (min_target.position.y - this.position.y) / targetDistance * velocityValue
+                x: (nearest.target.position.x - this.position.x) / targetDistance * velocityValue,
+                y: (nearest.target.position.y - this.position.y) / targetDistance * velocityValue
             }
         }
     },
