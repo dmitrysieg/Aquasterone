@@ -1,7 +1,5 @@
-let Utils = function() {
-}
+let Utils = {
 
-Utils.prototype = {
     // Math methods
     generateRandomVector: function(maxValue, minValue) {
         let angle = 2.0 * Math.PI * Math.random();
@@ -58,5 +56,3 @@ Utils.prototype = {
         }
     }
 }
-
-Utils = new Utils();
