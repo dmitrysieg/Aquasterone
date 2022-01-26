@@ -28,6 +28,9 @@ let Utils = {
     getVectorValue: function(v) {
         return Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2));
     },
+    getVectorValue2: function(v) {
+        return Math.pow(v.x, 2) + Math.pow(v.y, 2);
+    },
     getVectorDegree: function(v) {
         if (Math.abs(v.x) < 1e-5) {
             return v.y > 0 ? 90 : -90;
@@ -38,6 +41,33 @@ let Utils = {
                 deg += 180;
             }
             return Math.floor(deg);
+        }
+    },
+
+    getNormalUnity: function(v) {
+        if (this.getVectorValue2(v) < 1e-5) {
+            return {x: 0, y: 0};
+        } else {
+            let value = this.getVectorValue(v);
+            return {
+                x: v.y / value,
+                y: -v.x / value
+            };
+        }
+    },
+
+    // Mutable parameter
+    multiplyScalar: function(v, s) {
+        v.x *= s;
+        v.y *= s;
+        return v;
+    },
+
+    // Immutable parameter
+    addVector: function(v1, v2) {
+        return {
+            x: v1.x + v2.x,
+            y: v1.y + v2.y
         }
     },
 

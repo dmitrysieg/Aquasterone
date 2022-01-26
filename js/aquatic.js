@@ -6,6 +6,10 @@ let Aquatic = function(position, hormonal, outerWorld) {
     this.statusBar = Utils.addStatusBar(this.el);
 
     this.hormonal = hormonal;
+
+    // Left-handed or right-handed creature.
+    this.swarmOrientation = Math.random() > 0.5 ? 1 : -1;
+
     this.position = position;
     this.setVelocity(Utils.generateRandomVectorAngle(this.height * this.hormonal.testosterone));
     this.delayBeforeThinkAcc = 0;
@@ -21,11 +25,18 @@ Aquatic.prototype = {
     width: 32,
     maxHunger: 100,
     hungerSeekThreshold: 80,
+
+    // Define speed and hierarchy position.
     minTestosterone: 3,
     maxTestosterone: 13,
+
+    // Define how close to another creature can it swim.
+    minOxytocin: 0.2,
+    maxOxytocin: 1.4,
+
     delayBeforeThinkThreshold: 2000,
 
-    // Minus hunger per sec
+    // Speed of decreasing hunger per sec
     appetite: 2,
 
     getSize2: function() {
@@ -129,7 +140,12 @@ Aquatic.prototype = {
     },
     doAlterDirection: function(target) {
         if (target) {
-            this.setVelocityAlong(target);
+            let factor = this.height * this.hormonal.oxytocin * this.swarmOrientation;
+            let vectorAlong = Utils.multiplyScalar(Utils.getNormalUnity(target.velocity), factor);
+            let pointAlong = {
+                position: Utils.addVector(target.position, vectorAlong)
+            };
+            this.setVelocityAlong(pointAlong);
         } else {
             // so far nothing. choose random direction here;
         }

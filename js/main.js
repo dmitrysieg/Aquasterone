@@ -70,15 +70,20 @@
     let aquaticGenerator = {
         aquaticArray: [],
         doGen: function() {
+
             let position = Utils.generateRandomPosition(Aquatic.prototype);
+
             let testosterone = Utils.generateRandomScalar(Aquatic.prototype.minTestosterone, Aquatic.prototype.maxTestosterone);
+            let oxytocin = Utils.generateRandomScalar(Aquatic.prototype.minOxytocin, Aquatic.prototype.maxOxytocin);
+
             let outerWorld = {
                 aquaticGenerator: aquaticGenerator,
                 seaweedGenerator: seaweedGenerator,
                 media: media
             };
             let hormonal = {
-                testosterone: testosterone
+                testosterone: testosterone,
+                oxytocin: oxytocin
             };
             this.aquaticArray.push(new Aquatic(position, hormonal, outerWorld));
         },
@@ -113,7 +118,7 @@
     };
     audioMuteBtn.create();
 
-    for (let i = 0; i < 50; i++)
+    for (let i = 0; i < 150; i++)
         aquaticGenerator.doGen();
 
     let prev = performance.now();
