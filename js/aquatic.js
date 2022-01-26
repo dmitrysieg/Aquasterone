@@ -20,12 +20,13 @@ Aquatic.prototype = {
     height: 32,
     width: 32,
     maxHunger: 100,
+    hungerSeekThreshold: 80,
     minTestosterone: 3,
     maxTestosterone: 13,
     delayBeforeThinkThreshold: 2000,
 
     // Minus hunger per sec
-    appetite: 4,
+    appetite: 2,
 
     getSize2: function() {
         return Math.pow(this.height / 2, 2) + Math.pow(this.width / 2, 2);
@@ -75,11 +76,17 @@ Aquatic.prototype = {
         this.doRedraw();
     },
     doCheckTarget: function() {
-        if (this.target && !this.target.eaten && Utils.distance2(this.position, this.target.position) <= this.getSize2()) {
+        if (this.targetBehavior === 'seek' &&
+                this.target &&
+                !this.target.eaten &&
+                Utils.distance2(this.position, this.target.position) <= this.getSize2()) {
             this.doEat(this.target);
         }
     },
     doEat: function(object) {
+        if (object.hunger) {
+            console.warn(object);
+        }
         this.setHunger(Utils.addSaturate(this.hunger, object.foodValue, this.maxHunger));
         this.outerWorld.seaweedGenerator.doRemoveObject(object);
         this.outerWorld.media.bubble();
@@ -87,9 +94,62 @@ Aquatic.prototype = {
         object.eaten = true;
         this.target = null;
     },
+
+    doDecideThink: function(dt) {
+
+        if (this.hunger > this.hungerSeekThreshold) {
+            this.doSwarm(dt);
+        } else {
+            this.doSeek(dt);
+        }
+    },
+
+    doSwarm: function(dt) {
+        this.targetBehavior = 'swarm';
+        if (!this.target) {
+            this.target = this.chooseSwarmTarget();
+        }
+
+        this.doAlterDirection(this.target);
+    },
+    chooseSwarmTarget: function() {
+
+        let weakerDiff = Number.POSITIVE_INFINITY;
+        let weakerDiffTarget = null;
+
+        this.outerWorld.aquaticGenerator.aquaticArray.forEach(a => {
+            let diff = a.testosterone - this.testosterone;
+            if (diff > 0 && weakerDiff > diff) {
+                weakerDiff = diff;
+                weakerDiffTarget = a;
+            }
+        });
+
+        return weakerDiffTarget;
+    },
+    doAlterDirection: function(target) {
+        if (target) {
+            let velocityValue = Utils.getVectorValue(this.velocity);
+            let targetDistance = Utils.distance(this.position, target.position);
+            this.setVelocity({
+                x: (target.position.x - this.position.x) / targetDistance * velocityValue,
+                y: (target.position.y - this.position.y) / targetDistance * velocityValue
+            });
+        } else {
+            // so far nothing. choose random direction here;
+        }
+    },
+
     // Thinking regardless of target presence.
     // Can review target while having target.
-    doDecideThink: function(dt) {
+    doSeek: function(dt) {
+
+        // Stop thinking of your master
+        if (this.targetBehavior === 'swarm') {
+            this.target = null;
+        }
+        this.targetBehavior = 'seek';
+
         // make aquatic to think faster when hungry
         let actual_beforeThink_threshold = this.delayBeforeThinkThreshold * (this.hunger / 100);
 
