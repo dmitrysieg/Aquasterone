@@ -1,7 +1,7 @@
 (function() {
     let seaweedGenerator = {
         generatorAcc: 0,
-        generatorSpeed: 2000,
+        generatorSpeed: 1000,
         seaweedArray: [],
         doGen: function(dt) {
             this.generatorAcc += dt;
@@ -20,20 +20,33 @@
         }
     };
 
-    let position = Utils.generateRandomPosition(Aquatic.prototype);
-    let value = Math.random();
-    let aquaticArray = [];
-    aquaticArray.push(new Aquatic(position, value, seaweedGenerator));
+    let aquaticGenerator = {
+        aquaticArray: [],
+        doGen: function() {
+            let position = Utils.generateRandomPosition(Aquatic.prototype);
+            let value = Math.random();
+            this.aquaticArray.push(new Aquatic(position, value, seaweedGenerator));
+        },
+        doProcess: function(dt) {
+            this.aquaticArray.forEach(a => {
+                a.doDecideThink(dt);
+                a.doMoveSmart(dt);
+            });
+        }
+    };
+
+    aquaticGenerator.doGen();
+    aquaticGenerator.doGen();
+    aquaticGenerator.doGen();
+    aquaticGenerator.doGen();
+    aquaticGenerator.doGen();
 
     let prev = performance.now();
     requestAnimationFrame(function callback(time) {
         let dt = time - prev;
         prev = time;
 
-        aquaticArray.forEach(a => {
-            a.doDecideThink(dt);
-            a.doMoveSmart(dt);
-        });
+        aquaticGenerator.doProcess(dt);
 
         seaweedGenerator.doGen(dt);
 
