@@ -1,18 +1,18 @@
 html, body {
     margin: 0;
-    background-color: #000;
+    background: linear-gradient(#4400f2, #000);
     overflow: hidden;
 }
 
 .aquatic {
     position: absolute;
-    background-color: #ff0;
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAZtJREFUWEftltFxxCAMRO0Gro+rIP1/poLrww2QQUZEWiQh7Ju5mUz8k5wNq6cFCfbtw8++GL/A+NX5Q7hVgVKOU2N/nH8WE7gPUBUA4hbIlQy6C+9w4s8AXF6G2w7cXYZVACxDrwjSunVgFZ1NoMDl+6w9fPavo3+r/4tnpkuBZwDFCxz1AAESQjAAa+FgO/hTZbltr+YMv2+/M24QAGfYJkiIOQAHrylIsNdj46WJ3DgBakKaWoENVkOg/j1431r3UK6/APWTgCBXLMGZ/ZJW6h39/FAQJoDKGNZVQfFA3APy/fOgg8s7xDRAtK29tRbO0fQGzJZzYNGwAgfaMSsndSYJgBsOMpbBUEvsBRqmHBBn/Nl4oNp6uXkAkYOyO4l+1gGcC4YNkgwEtmOHJO0ZABnBM82lCWAgKdZRfUZ2Qq9l4jVML41VAXYnHHqA+cJISN2Ahg0GALDJWM49D6anVe+UTcoJQK543S7aMksAwU1Y3hMymp0pM/jtV3Esh1lRXc5uJpzehIkbUyaWOSazBJfFMxP/AT7uwA8O2K0e9YmJAQAAAABJRU5ErkJggg==');
     border-radius: 16px;
 }
 
 .seaweed {
     position: absolute;
-    background-color: #0c0;
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAI1JREFUOE+tk9ENgCAMRGEV5zFxVhPnYRVNP84c11KN6JcFerz2Si2TX53ML/8LLPt6tu24hS02Sl1D7AhUwJJVhM90N5kqb+I/EgCVQ2VcJOoaX5TWmuGDruvB2wbCeiNxAhGuzgr35LNAaGNmFyj0TDgHKCOzD4LhKHMiW6kTafHwLTwlpgSjeqOXewEW4JgRibtV0wAAAABJRU5ErkJggg==');
 }
 
 .aquatic .statusBar {

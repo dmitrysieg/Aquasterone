@@ -2,13 +2,13 @@ let Aquatic = function(position, value, outerWorld) {
 
     this.outerWorld = outerWorld;
 
-    this.value = value;
-    this.position = position;
-    this.velocity = Utils.generateRandomVector(this.height * 10, this.height * 2);
-    this.delayBeforeThinkAcc = 0;
-
     this.el = Utils.initElement('aquatic', this.height, this.width);
     Utils.addStatusBar(this.el);
+
+    this.value = value;
+    this.position = position;
+    this.setVelocity(Utils.generateRandomVector(this.height * 10, this.height * 2));
+    this.delayBeforeThinkAcc = 0;
 
     this.doRedraw();
     document.body.appendChild(this.el);
@@ -69,10 +69,10 @@ Aquatic.prototype = {
             // Modify velocity along the target
             let velocityValue = Utils.getVectorValue(this.velocity);
             let targetDistance = Utils.distance(this.position, nearest.target.position);
-            this.velocity = {
+            this.setVelocity({
                 x: (nearest.target.position.x - this.position.x) / targetDistance * velocityValue,
                 y: (nearest.target.position.y - this.position.y) / targetDistance * velocityValue
-            }
+            });
         }
     },
     doMove: function(dt) {
@@ -97,14 +97,18 @@ Aquatic.prototype = {
     },
     tryModifyVelocity: function(crashSide) {
         if (crashSide.x < 0 || crashSide.x > 0) {
-            this.velocity.x = -this.velocity.x;
+            this.setVelocity({x: -this.velocity.x, y: this.velocity.y});
         }
         if (crashSide.y < 0 || crashSide.y > 0) {
-            this.velocity.y = -this.velocity.y;
+            this.setVelocity({x: this.velocity.x, y: -this.velocity.y});
         }
     },
     doRedraw: function() {
         this.el.style.left = this.position.x - this.width / 2;
         this.el.style.top = this.position.y - this.height / 2;
+    },
+    setVelocity: function(v) {
+        this.velocity = v;
+        this.el.style.transform = 'rotate(' + Utils.getVectorDegree(v) + 'deg)';
     }
 }

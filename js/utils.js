@@ -18,6 +18,18 @@ let Utils = {
     getVectorValue: function(v) {
         return Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2));
     },
+    getVectorDegree: function(v) {
+        if (Math.abs(v.x) < 1e-5) {
+            return v.y > 0 ? 90 : -90;
+        } else {
+            let rad = Math.atan(v.y / v.x);
+            let deg = rad / Math.PI * 180;
+            if (v.x < 0) {
+                deg += 180;
+            }
+            return Math.floor(deg);
+        }
+    },
     // subject.position must exist
     // array[i].position must exist
     findNearestObject: function(subject, array) {
