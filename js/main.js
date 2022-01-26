@@ -11,7 +11,7 @@
             this.playSound('bubble.wav');
         },
         seaweed: function() {
-            this.playSound('seaweed.wav');
+            //this.playSound('seaweed.wav');
         },
         die: function() {
             this.playSound('die.wav');
@@ -23,7 +23,7 @@
 
     let seaweedGenerator = {
         generatorAcc: 0,
-        generatorSpeed: 1000,
+        generatorSpeed: 100,
         generatorDispersion: 0.2,
         nextGeneratorThreshold: 0,
         seaweedArray: [],
@@ -110,11 +110,8 @@
     };
     audioMuteBtn.create();
 
-    aquaticGenerator.doGen();
-    aquaticGenerator.doGen();
-    aquaticGenerator.doGen();
-    aquaticGenerator.doGen();
-    aquaticGenerator.doGen();
+    for (let i = 0; i < 50; i++)
+        aquaticGenerator.doGen();
 
     let prev = performance.now();
     requestAnimationFrame(function callback(time) {
