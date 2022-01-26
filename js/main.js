@@ -12,6 +12,9 @@
         },
         seaweed: function() {
             this.playSound('seaweed.wav');
+        },
+        die: function() {
+            this.playSound('die.wav');
         }
     };
 

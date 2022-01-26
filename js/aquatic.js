@@ -58,6 +58,7 @@ Aquatic.prototype = {
 
     doDie: function() {
         this.outerWorld.aquaticGenerator.doRemoveObject(this);
+        this.outerWorld.media.die();
     },
 
     doMoveSmart: function(dt) {
