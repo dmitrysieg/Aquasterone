@@ -36,7 +36,7 @@ let Utils = {
     },
     // subject.position must exist
     // array[i].position must exist
-    findNearestObject: function(subject, array) {
+    findNearestObject: function(subject, array, filteredProperty) {
 
         if (array.length <= 0) {
             return null;
@@ -45,15 +45,26 @@ let Utils = {
         let min_d2 = Number.POSITIVE_INFINITY;
         let min_target = null;
         for (i = 0, l = array.length; i < l; i++) {
+
+            if (array[i][filteredProperty]) {
+                continue;
+            }
+
             let d2 = Utils.distance2(subject.position, array[i].position);
             if (d2 < min_d2) {
                 min_d2 = d2;
                 min_target = array[i];
             }
         }
-        return {
-            d2: min_d2,
-            target: min_target
+
+        // Not found anything, except eaten objects
+        if (!min_target) {
+            return null
+        } else {
+            return {
+                d2: min_d2,
+                target: min_target
+            }
         }
     },
 

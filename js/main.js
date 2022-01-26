@@ -54,6 +54,21 @@
         }
     };
 
+    let audioMuteBtn = {
+        muted: true,
+        create: function() {
+            let el = document.createElement('button');
+            el.className = 'audiomute off';
+            el.onclick = function() {
+                audioMuteBtn.muted = !audioMuteBtn.muted;
+                el.className = 'audiomute ' + (audioMuteBtn.muted ? 'off' : 'on');
+            }
+
+            document.body.appendChild(el);
+        }
+    };
+    audioMuteBtn.create();
+
     aquaticGenerator.doGen();
     aquaticGenerator.doGen();
     aquaticGenerator.doGen();

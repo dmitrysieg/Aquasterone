@@ -22,8 +22,8 @@ Aquatic.prototype = {
     maxHunger: 100,
     delayBeforeThinkThreshold: 2000,
 
-    // Minus 5 per sec
-    appetite: 5,
+    // Minus hunger per sec
+    appetite: 4,
 
     getSize2: function() {
         return Math.pow(this.height / 2, 2) + Math.pow(this.width / 2, 2);
@@ -72,21 +72,21 @@ Aquatic.prototype = {
         this.doRedraw();
     },
     doCheckTarget: function() {
-        if (this.target && Utils.distance2(this.position, this.target.position) <= this.getSize2()) {
+        if (this.target && !this.target.eaten && Utils.distance2(this.position, this.target.position) <= this.getSize2()) {
             this.doEat(this.target);
         }
     },
     doEat: function(object) {
         this.setHunger(Utils.addSaturate(this.hunger, object.foodValue, this.maxHunger));
         this.outerWorld.seaweedGenerator.doRemoveObject(object);
+        new Audio('bubble.wav').play();
+
+        object.eaten = true;
         this.target = null;
     },
+    // Thinking regardless of target presence.
+    // Can review target while having target.
     doDecideThink: function(dt) {
-
-        if (this.target) {
-            return;
-        }
-
         // make aquatic to think faster when hungry
         let actual_beforeThink_threshold = this.delayBeforeThinkThreshold * (this.hunger / 100);
 
@@ -97,12 +97,17 @@ Aquatic.prototype = {
         }
     },
     doThink: function() {
-        let nearest = Utils.findNearestObject(this, this.outerWorld.seaweedGenerator.seaweedArray);
+        this.doTargetChoose();
+    },
+
+    doTargetChoose: function() {
+        let nearest = Utils.findNearestObject(this, this.outerWorld.seaweedGenerator.seaweedArray, 'eaten');
         if (!nearest) {
             return;
         }
 
         if (nearest.d2 <= this.getSize2()) {
+            this.target = nearest.target;
             this.doEat(nearest.target);
             return;
         } else {
@@ -117,6 +122,7 @@ Aquatic.prototype = {
             });
         }
     },
+
     doMove: function(dt) {
         let crashSideX = 0, crashSideY = 0;
 

@@ -35,3 +35,21 @@ html, body {
 .aquatic .statusBar .full {
     background-color: green;
 }
+
+.audiomute {
+    position: fixed;
+    border: none;
+    opacity: 0.5;
+    left: 16px;
+    top: 16px;
+    width: 32px;
+    height: 32px;
+}
+
+.audiomute.off {
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAVRJREFUWEfdl0sOgjAQhukVZIs7vP+BZCdbvAJmmpQM03lqgUQWJoa2/zfPDqm7+EkR/WUYV8/6fp7c57oWeoUpnAdEBfhWOAIiArQSLzCSN1iA1uIaRAWAxft52ry5DKMn/6o19AzqiR0AtRxvhpMtiNvruQG8749O2o8hQgASRBEGUXjgf0p1dIsBLIAUd2oFhqDCKNZVKKj3CsSGqSUeB7Gua1csxmoaMFmXtfOPlfWWSyOWUwg3QKbV42q6nWtQIQAJgqtPq2JgD+RBGMADIeVHEw/AIVyNl8PBcsgZLkH/B4BLRmzdoSGwxHEorMsjnISXlqEm/nMjsrrhEa141wc0gNMuIw7Ce7F4rmPzNvQAWO2VgkgTlTiQUIgWIxlXiiqAlZBWbVvv1ZkQb7ZmBEvIsry8P+XDpJQcB3Xop5km7PIAJY6ExfNdmGeLb2LZcs8Hvx0FMGtHMJ8AAAAASUVORK5CYII=')
+}
+
+.audiomute.on {
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAR9JREFUWEfNl0ESwiAMRdsr6FZ3ev8D6U63egUdnAlD0/zwoQXsrp2U//iBEOZp8DOX6L9Olw8Tf3ze6XGpQFZYwzEgLkCtcAkIBNhLXGCQGybA3uIexAqglTiCWADUiB8et5jy9/nKbJIpTUc1gAiLaHjfBMDOXgvLlBEA+i4uRAdyAEiYAQgx2p0FgCWe5tYaQCfbS4Hnws+BHgDIhSYAVrosF0IamgCE2WrB4QAWVFcHhgNY66KrA10B/mIXpIUKVdGYAlSMmEFqS3H4rwggFbKqmrXPvfNjdRgxLniOIAB0RG8GyDnidSawISl1gWp/jCAXoDWE7o67teWy6rUhXS4mSDx8b3o184TFCQpAgnN9Y2ovcy+kHahd7cx/X+a0IDDp9yVCAAAAAElFTkSuQmCC')
+}
