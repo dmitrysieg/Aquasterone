@@ -15,6 +15,9 @@
         },
         die: function() {
             this.playSound('die.wav');
+        },
+        seaweedDie: function() {
+            this.playSound('seaweed_die.wav');
         }
     };
 
@@ -38,7 +41,8 @@
                 let position = Utils.generateRandomPosition(Seaweed.prototype);
 
                 let outerWorld = {
-                    seaweedGenerator: seaweedGenerator
+                    seaweedGenerator: seaweedGenerator,
+                    media: media
                 };
                 this.seaweedArray.push(new Seaweed(position, outerWorld));
                 media.seaweed();

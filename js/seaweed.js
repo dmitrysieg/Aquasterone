@@ -19,10 +19,15 @@ Seaweed.prototype = {
     doLive: function(dt) {
         let newAge = this.age + dt;
         if (newAge >= this.lifetime) {
-            this.outerWorld.seaweedGenerator.doRemoveObject(this);
+            this.doDie();
             return;
         }
         this.setAge(newAge);
+    },
+
+    doDie: function() {
+        this.outerWorld.seaweedGenerator.doRemoveObject(this);
+        this.outerWorld.media.seaweedDie();
     },
 
     doRedraw: function() {
