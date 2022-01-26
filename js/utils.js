@@ -11,6 +11,15 @@ Utils.prototype = {
             y: value * Math.sin(angle)
         };
     },
+    distance: function(p1, p2) {
+        return Math.sqrt(Utils.distance2(p1, p2));
+    },
+    distance2: function(p1, p2) {
+        return Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2);
+    },
+    getVectorValue: function(v) {
+        return Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2));
+    },
 
     // Document methods
     initElement: function(name, h, w) {

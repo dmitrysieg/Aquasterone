@@ -1,25 +1,35 @@
 (function() {
-    let position = Utils.generateRandomPosition(Aquatic.prototype);
-    let value = Math.random();
-    let a1 = new Aquatic(position, value);
-
     let seaweedGenerator = {
-        acc: 0,
+        generatorAcc: 0,
+        generatorSpeed: 2000,
+        seaweedArray: [],
         doGen: function(dt) {
-            this.acc += dt;
-            if (this.acc > 5000) {
-                this.acc = 0;
+            this.generatorAcc += dt;
+            if (this.generatorAcc > this.generatorSpeed) {
+                this.generatorAcc -= this.generatorSpeed;
                 let position = Utils.generateRandomPosition(Seaweed.prototype);
-                new Seaweed(position);
+                this.seaweedArray.push(new Seaweed(position));
+            }
+        },
+        doRemoveObject: function(object) {
+            let i = this.seaweedArray.indexOf(object);
+            if (i > -1) {
+                this.seaweedArray.splice(i, 1);
+                object.el.remove();
             }
         }
     };
+
+    let position = Utils.generateRandomPosition(Aquatic.prototype);
+    let value = Math.random();
+    let a1 = new Aquatic(position, value, seaweedGenerator);
 
     let prev = performance.now();
     requestAnimationFrame(function callback(time) {
         let dt = time - prev;
         prev = time;
 
+        a1.doDecideThink(dt);
         a1.doMoveSmart(dt);
         seaweedGenerator.doGen(dt);
 
