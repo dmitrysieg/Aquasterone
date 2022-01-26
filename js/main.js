@@ -2,28 +2,49 @@
 
     let media = {
         muted: true,
-        bubble: function() {
+        playSound: function(name) {
             if (!this.muted) {
-                new Audio('bubble.wav').play();
+                new Audio(name).play();
             }
+        },
+        bubble: function() {
+            this.playSound('bubble.wav');
+        },
+        seaweed: function() {
+            this.playSound('seaweed.wav');
         }
     };
 
     let seaweedGenerator = {
         generatorAcc: 0,
         generatorSpeed: 1000,
+        generatorDispersion: 0.2,
+        nextGeneratorThreshold: 0,
         seaweedArray: [],
         doGen: function(dt) {
+
+            if (!this.nextGeneratorThreshold) {
+                this.nextGeneratorThreshold = this.createGeneratorThreshold();
+            }
+
             this.generatorAcc += dt;
-            if (this.generatorAcc > this.generatorSpeed) {
-                this.generatorAcc -= this.generatorSpeed;
+            if (this.generatorAcc > this.nextGeneratorThreshold) {
+                this.generatorAcc -= this.nextGeneratorThreshold;
+                this.nextGeneratorThreshold = this.createGeneratorThreshold();
+
                 let position = Utils.generateRandomPosition(Seaweed.prototype);
 
                 let outerWorld = {
                     seaweedGenerator: seaweedGenerator
                 };
                 this.seaweedArray.push(new Seaweed(position, outerWorld));
+                media.seaweed();
             }
+        },
+        createGeneratorThreshold: function() {
+            let halfWindowSize = this.generatorSpeed * this.generatorDispersion;
+            let randomShift = -halfWindowSize + 2 * halfWindowSize * Math.random();
+            return this.generatorSpeed + randomShift;
         },
         doProcess: function(dt) {
             this.seaweedArray.forEach(s => {
