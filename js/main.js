@@ -23,7 +23,7 @@
 
     let seaweedGenerator = {
         generatorAcc: 0,
-        generatorSpeed: 100,
+        generatorSpeed: 50,
         generatorDispersion: 0.2,
         nextGeneratorThreshold: 0,
         seaweedArray: [],

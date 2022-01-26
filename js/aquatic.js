@@ -13,6 +13,7 @@ let Aquatic = function(position, hormonal, outerWorld) {
     this.position = position;
     this.setVelocity(Utils.generateRandomVectorAngle(this.height * this.hormonal.testosterone));
     this.delayBeforeThinkAcc = 0;
+    this.reactionAcc = 0;
 
     this.hunger = this.maxHunger;
 
@@ -33,6 +34,8 @@ Aquatic.prototype = {
     // Define how close to another creature can it swim.
     minOxytocin: 0.2,
     maxOxytocin: 1.4,
+
+    reactionTime: 100,
 
     delayBeforeThinkThreshold: 2000,
 
@@ -121,7 +124,11 @@ Aquatic.prototype = {
             this.target = this.chooseSwarmTarget();
         }
 
-        this.doAlterDirection(this.target);
+        this.reactionAcc += dt;
+        if (this.reactionAcc >= this.reactionTime) {
+            this.reactionAcc -= this.reactionTime;
+            this.doAlterDirection(this.target);
+        }
     },
     chooseSwarmTarget: function() {
 
@@ -234,6 +241,14 @@ Aquatic.prototype = {
     setVelocityAlong: function(target) {
         this.setVelocity(Utils.createDirectionalVector(this, target, Utils.getVectorValue(this.velocity)));
     },
+
+    adjustVelocityHormonal: function() {
+        let factor = this.height * this.hormonal.testosterone / Utils.getVectorValue(this.velocity);
+        console.log(factor);
+        let newVelocity = Utils.multiplyScalar(this.velocity, factor);
+        this.setVelocity(newVelocity);
+    },
+
     setHunger: function(hunger) {
         this.hunger = hunger;
         this.statusBar.style.width = hunger + '%';
