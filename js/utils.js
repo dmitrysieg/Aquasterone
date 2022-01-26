@@ -73,7 +73,7 @@ let Utils = {
         let fullBar = document.createElement('div');
         fullBar.className = 'full';
         statusBar.appendChild(fullBar);
-        return statusBar;
+        return fullBar;
     },
     generateRandomPosition: function(object) {
         return {

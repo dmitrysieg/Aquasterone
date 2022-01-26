@@ -3,12 +3,14 @@ let Aquatic = function(position, value, outerWorld) {
     this.outerWorld = outerWorld;
 
     this.el = Utils.initElement('aquatic', this.height, this.width);
-    Utils.addStatusBar(this.el);
+    this.statusBar = Utils.addStatusBar(this.el);
 
     this.value = value;
     this.position = position;
     this.setVelocity(Utils.generateRandomVector(this.height * 10, this.height * 2));
     this.delayBeforeThinkAcc = 0;
+
+    this.hunger = 100;
 
     this.doRedraw();
     document.body.appendChild(this.el);
@@ -18,9 +20,40 @@ Aquatic.prototype = {
     height: 32,
     width: 32,
     delayBeforeThinkThreshold: 2000,
+
+    // Minus 5 per sec
+    appetite: 5,
+
     getSize2: function() {
         return Math.pow(this.height / 2, 2) + Math.pow(this.width / 2, 2);
     },
+
+    /* ------------------------------------------------------------------------------------------------------------- */
+
+    doLive: function(dt) {
+        this.doOrganismFunctions(dt);
+        this.doDecideThink(dt);
+        this.doMoveSmart(dt);
+    },
+
+    /* ------------------------------------------------------------------------------------------------------------- */
+
+    doOrganismFunctions: function(dt) {
+
+        // Hunger
+        let newHunger = this.hunger - (dt / 1000) * this.appetite;
+        if (newHunger <= 0) {
+            this.doDie();
+            return;
+        }
+
+        this.setHunger(newHunger);
+    },
+
+    doDie: function() {
+        this.el.style.filter = 'opacity(0.2) blur(2px)';
+    },
+
     doMoveSmart: function(dt) {
         let crashSide;
         crashSide = this.doMove(dt);
@@ -39,7 +72,7 @@ Aquatic.prototype = {
         }
     },
     doEat: function(object) {
-        this.outerWorld.doRemoveObject(object);
+        this.outerWorld.seaweedGenerator.doRemoveObject(object);
     },
     doDecideThink: function(dt) {
 
@@ -54,7 +87,7 @@ Aquatic.prototype = {
         }
     },
     doThink: function() {
-        let nearest = Utils.findNearestObject(this, this.outerWorld.seaweedArray);
+        let nearest = Utils.findNearestObject(this, this.outerWorld.seaweedGenerator.seaweedArray);
         if (!nearest) {
             return;
         }
@@ -107,8 +140,13 @@ Aquatic.prototype = {
         this.el.style.left = this.position.x - this.width / 2;
         this.el.style.top = this.position.y - this.height / 2;
     },
+
     setVelocity: function(v) {
         this.velocity = v;
         this.el.style.transform = 'rotate(' + Utils.getVectorDegree(v) + 'deg)';
+    },
+    setHunger: function(hunger) {
+        this.hunger = hunger;
+        this.statusBar.style.width = hunger + '%';
     }
 }

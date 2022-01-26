@@ -25,12 +25,15 @@
         doGen: function() {
             let position = Utils.generateRandomPosition(Aquatic.prototype);
             let value = Math.random();
-            this.aquaticArray.push(new Aquatic(position, value, seaweedGenerator));
+            let outerWorld = {
+                aquaticGenerator: aquaticGenerator,
+                seaweedGenerator: seaweedGenerator
+            };
+            this.aquaticArray.push(new Aquatic(position, value, outerWorld));
         },
         doProcess: function(dt) {
             this.aquaticArray.forEach(a => {
-                a.doDecideThink(dt);
-                a.doMoveSmart(dt);
+                a.doLive(dt);
             });
         }
     };
