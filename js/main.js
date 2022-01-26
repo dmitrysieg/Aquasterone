@@ -71,13 +71,13 @@
         aquaticArray: [],
         doGen: function() {
             let position = Utils.generateRandomPosition(Aquatic.prototype);
-            let value = Math.random();
+            let testosterone = Utils.generateRandomScalar(Aquatic.prototype.minTestosterone, Aquatic.prototype.maxTestosterone);
             let outerWorld = {
                 aquaticGenerator: aquaticGenerator,
                 seaweedGenerator: seaweedGenerator,
                 media: media
             };
-            this.aquaticArray.push(new Aquatic(position, value, outerWorld));
+            this.aquaticArray.push(new Aquatic(position, testosterone, outerWorld));
         },
         doProcess: function(dt) {
             this.aquaticArray.forEach(a => {

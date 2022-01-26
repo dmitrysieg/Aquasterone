@@ -5,13 +5,19 @@ let Utils = {
         let result = source + value;
         return result > max ? max : result;
     },
-    generateRandomVector: function(maxValue, minValue) {
+    generateRandomScalar: function(min, max) {
+        return min + (max - min) * Math.random();
+    },
+    generateRandomVectorAngle: function(value) {
         let angle = 2.0 * Math.PI * Math.random();
-        let value = (minValue || 0.0) + (maxValue - (minValue || 0.0)) * Math.random();
         return {
             x: value * Math.cos(angle),
             y: value * Math.sin(angle)
         };
+    },
+    generateRandomVector: function(maxValue, minValue) {
+        let value = this.generateRandomScalar(minValue || 0.0, maxValue);
+        return this.generateRandomVectorAngle(value);
     },
     distance: function(p1, p2) {
         return Math.sqrt(Utils.distance2(p1, p2));

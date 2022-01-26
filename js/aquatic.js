@@ -1,13 +1,13 @@
-let Aquatic = function(position, value, outerWorld) {
+let Aquatic = function(position, testosterone, outerWorld) {
 
     this.outerWorld = outerWorld;
 
     this.el = Utils.initElement('aquatic', this.height, this.width);
     this.statusBar = Utils.addStatusBar(this.el);
 
-    this.value = value;
+    this.testosterone = testosterone;
     this.position = position;
-    this.setVelocity(Utils.generateRandomVector(this.height * 10, this.height * 2));
+    this.setVelocity(Utils.generateRandomVectorAngle(this.height * this.testosterone));
     this.delayBeforeThinkAcc = 0;
 
     this.hunger = this.maxHunger;
@@ -20,6 +20,8 @@ Aquatic.prototype = {
     height: 32,
     width: 32,
     maxHunger: 100,
+    minTestosterone: 3,
+    maxTestosterone: 13,
     delayBeforeThinkThreshold: 2000,
 
     // Minus hunger per sec
