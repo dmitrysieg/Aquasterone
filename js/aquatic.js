@@ -79,7 +79,7 @@ Aquatic.prototype = {
     doEat: function(object) {
         this.setHunger(Utils.addSaturate(this.hunger, object.foodValue, this.maxHunger));
         this.outerWorld.seaweedGenerator.doRemoveObject(object);
-        new Audio('bubble.wav').play();
+        this.outerWorld.media.bubble();
 
         object.eaten = true;
         this.target = null;

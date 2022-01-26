@@ -1,4 +1,14 @@
 (function() {
+
+    let media = {
+        muted: true,
+        bubble: function() {
+            if (!this.muted) {
+                new Audio('bubble.wav').play();
+            }
+        }
+    };
+
     let seaweedGenerator = {
         generatorAcc: 0,
         generatorSpeed: 1000,
@@ -36,7 +46,8 @@
             let value = Math.random();
             let outerWorld = {
                 aquaticGenerator: aquaticGenerator,
-                seaweedGenerator: seaweedGenerator
+                seaweedGenerator: seaweedGenerator,
+                media: media
             };
             this.aquaticArray.push(new Aquatic(position, value, outerWorld));
         },
@@ -55,13 +66,15 @@
     };
 
     let audioMuteBtn = {
-        muted: true,
+        pressed: true,
         create: function() {
             let el = document.createElement('button');
             el.className = 'audiomute off';
             el.onclick = function() {
-                audioMuteBtn.muted = !audioMuteBtn.muted;
-                el.className = 'audiomute ' + (audioMuteBtn.muted ? 'off' : 'on');
+                audioMuteBtn.pressed = !audioMuteBtn.pressed;
+                el.className = 'audiomute ' + (audioMuteBtn.pressed ? 'off' : 'on');
+
+                media.muted = audioMuteBtn.pressed;
             }
 
             document.body.appendChild(el);
