@@ -26,6 +26,9 @@
         generatorSpeed: 50,
         generatorDispersion: 0.2,
         nextGeneratorThreshold: 0,
+
+        clusterGenerationProbability: 0.75,
+
         seaweedArray: [],
         doGen: function(dt) {
 
@@ -38,7 +41,7 @@
                 this.generatorAcc -= this.nextGeneratorThreshold;
                 this.nextGeneratorThreshold = this.createGeneratorThreshold();
 
-                let position = Utils.generateRandomPosition(Seaweed.prototype);
+                let position = this.doGenPosition2();
 
                 let outerWorld = {
                     seaweedGenerator: seaweedGenerator,
@@ -46,6 +49,31 @@
                 };
                 this.seaweedArray.push(new Seaweed(position, outerWorld));
                 media.seaweed();
+            }
+        },
+
+        /**
+         * Uniform distribution of grow position.
+         */
+        doGenPosition: function() {
+            return Utils.generateRandomPosition(Seaweed.prototype);
+        },
+
+        /**
+         * Experimental
+         * Suppose that seaweed tend to grow near other seaweed, so it should generate clusters.
+         */
+        doGenPosition2: function() {
+            if (this.seaweedArray.length > 0 && Math.random() <= this.clusterGenerationProbability) {
+                let parent = Utils.getRandomElement(this.seaweedArray);
+                let position = Utils.generateRandomPositionNear(Seaweed.prototype, parent.position);
+                if (!position) {
+                    return Utils.generateRandomPosition(Seaweed.prototype);
+                } else {
+                    return position;
+                }
+            } else {
+                return Utils.generateRandomPosition(Seaweed.prototype);
             }
         },
         createGeneratorThreshold: function() {

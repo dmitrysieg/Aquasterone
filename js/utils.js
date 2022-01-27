@@ -1,5 +1,12 @@
 let Utils = {
 
+    /**
+     * Constants
+     */
+    AMOUNT_ATTEMPT: 50,
+    CLUSTER_DISTANCE_MIN: 2,
+    CLUSTER_DISTANCE_MAX: 3,
+
     // Math methods
     addSaturate: function(source, value, max) {
         let result = source + value;
@@ -114,6 +121,14 @@ let Utils = {
         }
     },
 
+    /**
+     * @param array Must be non-empty.
+     * @return Non-null element of array.
+     */
+    getRandomElement(array) {
+        return array[Math.floor(Math.random() * array.length)];
+    },
+
     // Document methods
     initElement: function(name, h, w) {
         let el = document.createElement('div');
@@ -136,10 +151,39 @@ let Utils = {
         statusBar.appendChild(fullBar);
         return fullBar;
     },
+
+    /**
+     * Document clip check
+     */
+    checkClip: function(position, halfSize) {
+        return position.x >= halfSize &&
+                position.x <= document.body.clientWidth - halfSize &&
+                position.y >= halfSize &&
+                position.y <= document.body.clientHeight - halfSize;
+    },
+
+    /**
+     * Position generation
+     */
     generateRandomPosition: function(object) {
         return {
             x: (object.width / 2) + Math.random() * (document.body.clientWidth - object.width),
             y: (object.height / 2) + Math.random() * (document.body.clientHeight - object.height)
         }
+    },
+
+    /**
+     * @param prototype Define distance distribution between source and new position.
+     * @param position Source position
+     * @return New position or null, if not succeeded to generate new position within clip.
+     */
+    generateRandomPositionNear: function(prototype, position) {
+        let newPosition, acc = 0;
+        do {
+            let dv = this.generateRandomVector(prototype.height * this.CLUSTER_DISTANCE_MAX, prototype.height * this.CLUSTER_DISTANCE_MIN);
+            newPosition = this.addVector(position, dv);
+            acc++;
+        } while (!this.checkClip(newPosition, prototype.height / 2) && acc <= this.AMOUNT_ATTEMPT);
+        return newPosition;
     }
 }
