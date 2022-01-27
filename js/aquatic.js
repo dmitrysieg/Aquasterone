@@ -37,7 +37,7 @@ Aquatic.prototype = {
     maxOxytocin: 1.4,
 
     swarmReactionTime: 100,
-    seekReactionTime: 2000,
+    seekReactionTime: 200,
 
     // Speed of decreasing hunger per sec
     appetite: 2,
