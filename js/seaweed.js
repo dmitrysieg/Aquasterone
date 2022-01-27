@@ -13,7 +13,7 @@ let Seaweed = function(position, outerWorld) {
 Seaweed.prototype = {
     height: 16,
     width: 16,
-    foodValue: 15,
+    foodValue: 30,
     lifetime: 30 * 1000,
 
     doLive: function(dt) {
