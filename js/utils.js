@@ -1,13 +1,15 @@
 let Utils = {
 
-    /**
-     * Constants
-     */
+// --------------------------------------
+//               Constants
+// --------------------------------------
     AMOUNT_ATTEMPT: 50,
     CLUSTER_DISTANCE_MIN: 2,
     CLUSTER_DISTANCE_MAX: 3,
 
-    // Math methods
+// --------------------------------------
+//             Math methods
+// --------------------------------------
     addSaturate: function(source, value, max) {
         let result = source + value;
         return result > max ? max : result;
@@ -87,6 +89,10 @@ let Utils = {
         };
     },
 
+// --------------------------------------
+//            Object search
+// --------------------------------------
+
     // subject.position must exist
     // array[i].position must exist
     findNearestObject: function(subject, array, filteredProperty) {
@@ -129,7 +135,9 @@ let Utils = {
         return array[Math.floor(Math.random() * array.length)];
     },
 
-    // Document methods
+// --------------------------------------
+//           Document methods
+// --------------------------------------
     initElement: function(name, h, w) {
         let el = document.createElement('div');
         el.className = name;
@@ -162,9 +170,9 @@ let Utils = {
                 position.y <= document.body.clientHeight - halfSize;
     },
 
-    /**
-     * Position generation
-     */
+// --------------------------------------
+//         Position generation
+// --------------------------------------
     generateRandomPosition: function(object) {
         return {
             x: (object.width / 2) + Math.random() * (document.body.clientWidth - object.width),
@@ -186,4 +194,40 @@ let Utils = {
         } while (!this.checkClip(newPosition, prototype.height / 2) && acc <= this.AMOUNT_ATTEMPT);
         return newPosition;
     }
-}
+};
+
+// --------------------------------------
+//              Generators
+// --------------------------------------
+
+Utils.DispersionGenerator = function(speed, dispersion, subject, callable) {
+    this.acc = 0;
+    this.speed = speed;
+    this.dispersion = dispersion;
+
+    this.subject = subject;
+    this.callable = callable;
+};
+
+Utils.DispersionGenerator.prototype = {
+
+    doGen: function(dt) {
+
+        if (!this.nextThreshold) {
+            this.nextThreshold = this.createNextThreshold();
+        }
+
+        this.acc += dt;
+        if (this.acc > this.nextThreshold) {
+            this.acc -= this.nextThreshold;
+            this.nextThreshold = this.createNextThreshold();
+
+            this.callable.call(this.subject);
+        }
+    },
+    createNextThreshold: function() {
+        let halfWindowSize = this.speed * this.dispersion;
+        let randomShift = -halfWindowSize + 2 * halfWindowSize * Math.random();
+        return this.speed + randomShift;
+    },
+};

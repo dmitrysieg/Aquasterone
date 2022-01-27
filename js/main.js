@@ -21,35 +21,36 @@
         }
     };
 
-    let seaweedGenerator = {
-        generatorAcc: 0,
+    let SeaweedGenerator = function() {
+        this.generator = new Utils.DispersionGenerator(
+            this.generatorSpeed,
+            this.generatorDispersion,
+            this,
+            this.doGenInternal
+        );
+    }
+
+    SeaweedGenerator.prototype = {
+
         generatorSpeed: 50,
         generatorDispersion: 0.2,
-        nextGeneratorThreshold: 0,
 
         clusterGenerationProbability: 0.75,
-
         seaweedArray: [],
+
         doGen: function(dt) {
+            this.generator.doGen(dt);
+        },
 
-            if (!this.nextGeneratorThreshold) {
-                this.nextGeneratorThreshold = this.createGeneratorThreshold();
-            }
+        doGenInternal: function() {
+            let position = this.doGenPosition2();
 
-            this.generatorAcc += dt;
-            if (this.generatorAcc > this.nextGeneratorThreshold) {
-                this.generatorAcc -= this.nextGeneratorThreshold;
-                this.nextGeneratorThreshold = this.createGeneratorThreshold();
-
-                let position = this.doGenPosition2();
-
-                let outerWorld = {
-                    seaweedGenerator: seaweedGenerator,
-                    media: media
-                };
-                this.seaweedArray.push(new Seaweed(position, outerWorld));
-                media.seaweed();
-            }
+            let outerWorld = {
+                seaweedGenerator: this,
+                media: media
+            };
+            this.seaweedArray.push(new Seaweed(position, outerWorld));
+            media.seaweed();
         },
 
         /**
@@ -76,11 +77,6 @@
                 return Utils.generateRandomPosition(Seaweed.prototype);
             }
         },
-        createGeneratorThreshold: function() {
-            let halfWindowSize = this.generatorSpeed * this.generatorDispersion;
-            let randomShift = -halfWindowSize + 2 * halfWindowSize * Math.random();
-            return this.generatorSpeed + randomShift;
-        },
         doProcess: function(dt) {
             this.seaweedArray.forEach(s => {
                 s.doLive(dt);
@@ -95,7 +91,12 @@
         }
     };
 
-    let aquaticGenerator = {
+    let AquaticGenerator = function(seaweedGenerator, media) {
+        this.seaweedGenerator = seaweedGenerator;
+        this.media = media;
+    }
+
+    AquaticGenerator.prototype = {
         aquaticArray: [],
         doGen: function() {
 
@@ -105,9 +106,9 @@
             let oxytocin = Utils.generateRandomScalar(Aquatic.prototype.minOxytocin, Aquatic.prototype.maxOxytocin);
 
             let outerWorld = {
-                aquaticGenerator: aquaticGenerator,
-                seaweedGenerator: seaweedGenerator,
-                media: media
+                aquaticGenerator: this,
+                seaweedGenerator: this.seaweedGenerator,
+                media: this.media
             };
             let hormonal = {
                 testosterone: testosterone,
@@ -145,6 +146,9 @@
         }
     };
     audioMuteBtn.create();
+
+    seaweedGenerator = new SeaweedGenerator();
+    aquaticGenerator = new AquaticGenerator(seaweedGenerator, media);
 
     for (let i = 0; i < 150; i++)
         aquaticGenerator.doGen();
