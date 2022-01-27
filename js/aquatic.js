@@ -12,8 +12,9 @@ let Aquatic = function(position, hormonal, outerWorld) {
 
     this.position = position;
     this.setVelocity(Utils.generateRandomVectorAngle(this.height * this.hormonal.testosterone));
-    this.delayBeforeThinkAcc = 0;
-    this.reactionAcc = 0;
+
+    this.seekReaction = new Utils.UniformAccumulator(this.seekReactionTime, this.doSeekReaction, this);
+    this.swarmReaction = new Utils.UniformAccumulator(this.swarmReactionTime, this.doSwarmReaction, this);
 
     this.hunger = this.maxHunger;
 
@@ -35,9 +36,8 @@ Aquatic.prototype = {
     minOxytocin: 0.2,
     maxOxytocin: 1.4,
 
-    reactionTime: 100,
-
-    delayBeforeThinkThreshold: 2000,
+    swarmReactionTime: 100,
+    seekReactionTime: 2000,
 
     // Speed of decreasing hunger per sec
     appetite: 2,
@@ -124,12 +124,12 @@ Aquatic.prototype = {
             this.target = this.chooseSwarmTarget();
         }
 
-        this.reactionAcc += dt;
-        if (this.reactionAcc >= this.reactionTime) {
-            this.reactionAcc -= this.reactionTime;
-            this.doAlterDirection(this.target);
-        }
+        this.swarmReaction.awaitOrAct(dt);
     },
+    doSwarmReaction: function() {
+        this.doAlterDirection(this.target);
+    },
+
     chooseSwarmTarget: function() {
 
         let weakerDiff = Number.POSITIVE_INFINITY;
@@ -169,15 +169,10 @@ Aquatic.prototype = {
         this.targetBehavior = 'seek';
 
         // make aquatic to think faster when hungry
-        let actual_beforeThink_threshold = this.delayBeforeThinkThreshold * (this.hunger / 100);
-
-        this.delayBeforeThinkAcc += dt;
-        if (this.delayBeforeThinkAcc >= actual_beforeThink_threshold) {
-            this.delayBeforeThinkAcc = 0;
-            this.doThink();
-        }
+        this.seekReaction.updateSpeed(this.seekReactionTime * this.hunger / 100);
+        this.seekReaction.awaitOrAct(dt);
     },
-    doThink: function() {
+    doSeekReaction: function() {
         this.doTargetChoose();
     },
 

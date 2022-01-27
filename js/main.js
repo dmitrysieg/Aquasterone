@@ -22,7 +22,7 @@
     };
 
     let SeaweedGenerator = function() {
-        this.generator = new Utils.DispersionGenerator(
+        this.generator = new Utils.DispersionAccumulator(
             this.generatorSpeed,
             this.generatorDispersion,
             this,
@@ -39,7 +39,7 @@
         seaweedArray: [],
 
         doGen: function(dt) {
-            this.generator.doGen(dt);
+            this.generator.awaitOrAct(dt);
         },
 
         doGenInternal: function() {

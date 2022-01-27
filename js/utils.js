@@ -200,7 +200,30 @@ let Utils = {
 //              Generators
 // --------------------------------------
 
-Utils.DispersionGenerator = function(speed, dispersion, subject, callable) {
+Utils.UniformAccumulator = function(speed, callable, subject) {
+    this.acc = 0;
+    this.speed = speed;
+
+    this.subject = subject;
+    this.callable = callable;
+};
+
+Utils.UniformAccumulator.prototype = {
+
+    awaitOrAct: function(dt) {
+        this.acc += dt;
+        if (this.acc >= this.speed) {
+            this.acc -= this.speed;
+            this.callable.call(this.subject);
+        }
+    },
+
+    updateSpeed: function(speed) {
+        this.speed = speed;
+    }
+};
+
+Utils.DispersionAccumulator = function(speed, dispersion, subject, callable) {
     this.acc = 0;
     this.speed = speed;
     this.dispersion = dispersion;
@@ -209,9 +232,9 @@ Utils.DispersionGenerator = function(speed, dispersion, subject, callable) {
     this.callable = callable;
 };
 
-Utils.DispersionGenerator.prototype = {
+Utils.DispersionAccumulator.prototype = {
 
-    doGen: function(dt) {
+    awaitOrAct: function(dt) {
 
         if (!this.nextThreshold) {
             this.nextThreshold = this.createNextThreshold();
