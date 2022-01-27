@@ -8,16 +8,16 @@
             }
         },
         bubble: function() {
-            this.playSound('bubble.wav');
+            this.playSound('audio/bubble.wav');
         },
         seaweed: function() {
-            //this.playSound('seaweed.wav');
+            //this.playSound('audio/seaweed.wav');
         },
         die: function() {
-            this.playSound('die.wav');
+            this.playSound('audio/die.wav');
         },
         seaweedDie: function() {
-            this.playSound('seaweed_die.wav');
+            this.playSound('audio/seaweed_die.wav');
         }
     };
 

@@ -1,6 +1,8 @@
 # Aquasterone
 Simulation of aquatic inhabitants' behaviour.
 
+Demo: https://dmitrysieg.github.io/Aquasterone/
+
 ![Screenshot](Screenshot.png)
 
 ## Rules
